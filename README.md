@@ -57,11 +57,11 @@ should be quick if you already completed the lab on load balancing):
 
 - We expect, at least, to see in your report:
 
-  - An introduction describing briefly the lab
+  - **An introduction describing briefly the lab**
 
   - Seven chapters, one for each task (0 to 6)
 
-  - A table of content
+  - **A table of content**
 
   - A chapter named "Difficulties" where you describe the problems you have encountered and
     the solutions you found
@@ -436,8 +436,8 @@ We need to copy the `run.sh` scripts as `run` files in the service
 directories.  You can achieve that by the following commands :
 
 ```bash
-cp cp ./ha/scripts/run.sh ./ha/services/ha/run && chmod +x ./ha/services/ha/run
-cp /webapp/scripts/run.sh /webapp/services/node/run && chmod +x /webapp/services/node/run
+cp ./ha/scripts/run.sh ./ha/services/ha/run && chmod +x ./ha/services/ha/run
+cp ./webapp/scripts/run.sh ./webapp/services/node/run && chmod +x ./webapp/services/node/run
 ```
 
 Once copied, replace the hashbang instruction in both files. Replace
