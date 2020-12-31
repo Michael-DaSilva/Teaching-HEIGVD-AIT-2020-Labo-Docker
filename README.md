@@ -620,7 +620,7 @@ In each directory, create an executable file called `run`. You can
 achieve that by the following commands:
 
 ```bash
-touch /ha/services/serf/run && chmod +x /ha/services/serf/run
+touch ./ha/services/serf/run && chmod +x ./ha/services/serf/run
 touch ./webapp/services/serf/run && chmod +x ./webapp/services/serf/run
 ```
 
@@ -898,8 +898,8 @@ docker run -d --network heig --name s1 <imageName>
     clean these two files (and folder in case of web application).
 
     ```bash
-    rm /ha/scripts/run.sh
-    rm -r /webapp/scripts
+    rm ./ha/scripts/run.sh
+    rm -r ./webapp/scripts
     ```
 
 **Deliverables**:
