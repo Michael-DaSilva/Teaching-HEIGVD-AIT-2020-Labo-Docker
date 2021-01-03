@@ -1,0 +1,4 @@
+CONTAINER ID   IMAGE     COMMAND   CREATED          STATUS          PORTS                                  NAMES
+881b93ac6223   webapp    "/init"   50 seconds ago   Up 50 seconds   3000/tcp, 7373/tcp, 7946/tcp           s2
+691caac1b19b   webapp    "/init"   2 minutes ago    Up 2 minutes    3000/tcp, 7373/tcp, 7946/tcp           s1
+661173907e4b   haproxy   "/init"   2 minutes ago    Up 2 minutes    80/tcp, 1936/tcp, 7373/tcp, 7946/tcp   ha
