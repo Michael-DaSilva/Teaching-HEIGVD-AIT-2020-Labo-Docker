@@ -1,0 +1,5 @@
+root@3d7278ce4e9b:/# ls /nodes/
+25c40a76f290
+root@3d7278ce4e9b:/# cat /nodes/25c40a76f290
+25c40a76f290 192.168.42.4
+root@3d7278ce4e9b:/#

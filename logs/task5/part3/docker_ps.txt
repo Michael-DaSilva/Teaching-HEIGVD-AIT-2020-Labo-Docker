@@ -1,0 +1,3 @@
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                                                                                    NAMES
+25c40a76f290        node                "/init"             46 minutes ago      Up 16 minutes       3000/tcp, 7373/tcp, 7946/tcp                                                             s2
+3d7278ce4e9b        lb                  "/init"             55 minutes ago      Up 28 minutes       0.0.0.0:80->80/tcp, 7373/tcp, 0.0.0.0:1936->1936/tcp, 0.0.0.0:9999->9999/tcp, 7946/tcp   ha
