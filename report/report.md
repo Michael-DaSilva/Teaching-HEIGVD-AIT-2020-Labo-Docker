@@ -106,62 +106,42 @@ Finally, `s2` node has the same information that `s1`. If we kill one of the nod
 ![](images/3_s1_logs2.png)
 
 
-
 ### Task 4: Use a template engine to easily generate configuration files
-1. You probably noticed when we added `xz-utils`, we have to rebuild
-   the whole image which took some time. What can we do to mitigate
-   that? Take a look at the Docker documentation on
-   [image layers](https://docs.docker.com/engine/userguide/storagedriver/imagesandcontainers/#images-and-layers).
-   Tell us about the pros and cons to merge as much as possible of the
-   command. In other words, compare:
 
-  ```
-  RUN command 1
-  RUN command 2
-  RUN command 3
-  ```
-
-  vs.
-
-  ```
+To reduce the image one of the best way to do that is to do like the second example:
+```
   RUN command 1 && command 2 && command 3
-  ```
+```
+Because it will reduce the number of layer. If we do it like the first example it will have 3 layers and with this one it will only have one layer.
 
-  There are also some articles about techniques to reduce the image
-  size. Try to find them. They are talking about `squashing` or
-  `flattening` images.
+For Docker squashing, the objectif is to flatten the image as much as possible. To do that it change all multiple layer in one layer to be smaller.
 
+For Docker flattening, it will take all exisiting layers and export the as a single file system image (.tar). And then when we want to use it, we will import it but we must to be carefull because the history of container is not perserve. 
 
+```
+docker export # Flatten
+docker import # Import when using
+```
 
-2. Propose a different approach to architecture our images to be able
-   to reuse as much as possible what we have done. Your proposition
-   should also try to avoid as much as possible repetitions between
-   your images.
+// TODO QUESTION 2
 
-3. Provide the `/tmp/haproxy.cfg` file generated in the `ha` container
-   after each step.  Place the output into the `logs` folder like you
-   already did for the Docker logs in the previous tasks. Three files
-   are expected.
-   
-   In addition, provide a log file containing the output of the 
-   `docker ps` console and another file (per container) with
-   `docker inspect <container>`. Four files are expected.
+In the folder logs/task4 you can find all file for this delivery.
 
-   In the folder logs/task4 you can find all file for this delivery.
+1_haproxy.cfg --> After docker-compose up --build  
+2_haproxy.cfg --> After running docker run -d --network heig --name s1 <imageName>  
+3_haproxy.cfg --> After running docker run -d --network heig --name s2 <imageName>  
+dockerps.txt  --> Information about docker ps  
+dockerInspectHa.txt --> Information about docker inspect ha  
+dockerInspectS1.txt --> Information about docker inspect s1  
+dockerInspectS2.txt --> Information about docker inspect s2  
 
-   1_haproxy.cfg --> After docker-compose up --build  
-   2_haproxy.cfg --> After running docker run -d --network heig --name s1 <imageName>  
-   3_haproxy.cfg --> After running docker run -d --network heig --name s2 <imageName>  
-   dockerps.txt  --> Information about docker ps  
-   dockerInspectHa.txt --> Information about docker inspect ha  
-   dockerInspectS1.txt --> Information about docker inspect s1  
-   dockerInspectS2.txt --> Information about docker inspect s2  
+If we compare the 3 file (1_haproxy-cfg -> 3_haproxy.cfg) we can see that we don't have an history about all container who in joined the cluster. Every time that a container is joined the cluster it rewrite the file haproxy.cfg. It could be better to have an history of all joined container.
 
-4. Based on the three output files you have collected, what can you
-   say about the way we generate it? What is the problem if any?
-
-   We can see that we don't have an history about all container who in joined. Every time is rewrite all content.
-
+**source:**   
+https://docs.docker.com/develop/dev-best-practices/  
+https://blog.codacy.com/five-ways-to-slim-your-docker-images/
+https://forums.docker.com/t/how-to-flatten-an-image-with-127-parents/1600  
+https://tuhrig.de/flatten-a-docker-container-or-image/
 
 
 ### Task 5: Generate a new load balancer configuration when membership changes
