@@ -4,8 +4,7 @@ FROM haproxy:2.2
 LABEL Michaël da Silva <michael.dasilva@heig-vd.ch>
 
 # Install some tools
-RUN apt-get update && apt-get -y install xz-utils
-RUN apt-get update && apt-get -y install wget curl vim iputils-ping rsyslog
+RUN apt-get update && apt-get -y install wget curl vim iputils-ping rsyslog xz-utils
 
 # Download and install S6 overlay
 RUN curl -sSLo /tmp/s6.tar.gz https://github.com/just-containers/s6-overlay/releases/download/v2.1.0.2/s6-overlay-amd64.tar.gz \
@@ -45,9 +44,9 @@ RUN chmod +x /serf-handlers/*
 COPY config/haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
 COPY config/rsyslogd.cfg /etc/rsyslog.d/49-haproxy.conf
 
-# TODO: [HB] Copy the haproxy configuration template
-RUN mkdir /config
-COPY config/haproxy.cfg.hb /config
+# Copy the haproxy configuration template
+RUN mkdir -p /config
+COPY config/haproxy.cfg.hb /config/haproxy.cfg.hb
 
 # Clean up
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
