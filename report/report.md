@@ -99,7 +99,15 @@ We can see the same informations in the logs of `s1` (nodes connected to the clu
 
 ![](images/3_s2_logs.png)
 
-<<<<<<< HEAD
+Finally, `s2` node has the same information that `s1`. If we kill one of the node, the load balancer detect it and spread the information to the others nodes.
+
+![](images/3_ha_logs2.png)
+
+![](images/3_s1_logs2.png)
+
+
+### Task 4: Use a template engine to easily generate configuration files
+
 To reduce the image one of the best way to do that is to do like the second example:
 ```
   RUN command 1 && command 2 && command 3
@@ -128,11 +136,13 @@ dockerInspectS1.txt --> Information about docker inspect s1
 dockerInspectS2.txt --> Information about docker inspect s2  
 
 If we compare the 3 file (1_haproxy-cfg -> 3_haproxy.cfg) we can see that we don't have an history about all container who in joined the cluster. Every time that a container is joined the cluster it rewrite the file haproxy.cfg. It could be better to have an history of all joined container.
- 
+
+**source:**   
 https://docs.docker.com/develop/dev-best-practices/  
 https://blog.codacy.com/five-ways-to-slim-your-docker-images/
 https://forums.docker.com/t/how-to-flatten-an-image-with-127-parents/1600  
 https://tuhrig.de/flatten-a-docker-container-or-image/
+
 
 ### Task 5: Generate a new load balancer configuration when membership changes
 
