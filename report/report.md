@@ -127,13 +127,13 @@ docker import # Import when using
 
 In the folder logs/task4 you can find all file for this delivery.
 
-1_haproxy.cfg --> After docker-compose up --build  
-2_haproxy.cfg --> After running docker run -d --network heig --name s1 <imageName>  
-3_haproxy.cfg --> After running docker run -d --network heig --name s2 <imageName>  
-dockerps.txt  --> Information about docker ps  
-dockerInspectHa.txt --> Information about docker inspect ha  
-dockerInspectS1.txt --> Information about docker inspect s1  
-dockerInspectS2.txt --> Information about docker inspect s2  
+1_haproxy.cfg → Configuration file after ha started
+2_haproxy.cfg → Configuration file After s1 started
+3_haproxy.cfg → Configuration file After s2 started
+dockerps.txt  → Information about docker ps  
+dockerInspectHa.txt → Information about docker inspect ha  
+dockerInspectS1.txt → Information about docker inspect s1  
+dockerInspectS2.txt → Information about docker inspect s2  
 
 If we compare the 3 file (1_haproxy-cfg -> 3_haproxy.cfg) we can see that we don't have an history about all container who in joined the cluster. Every time that a container is joined the cluster it rewrite the file haproxy.cfg. It could be better to have an history of all joined container.
 
@@ -146,7 +146,24 @@ https://tuhrig.de/flatten-a-docker-container-or-image/
 
 ### Task 5: Generate a new load balancer configuration when membership changes
 
+In the folder logs/task5 you can find all file for this delivery.
 
+**Part 1:**  
+haproxy_cfg1.txt → After ha started  
+haproxy_cfg2.txt → After s1 started  
+haproxy_cfg2.txt → After s2 started  
+docker_inspect_ha.txt → Information about docker inspect ha    
+docker_inspect_s1.txt → Information about docker inspect s1    
+docker_inspect_s2.txt → Information about docker inspect s2    
+docker_ps.txt → Information about docker ps  
+
+**Part 2:**  
+nodes_file.txt → Content inside the folder /nodes and there is also all content inside different files inside it.
+
+**Part 3:**  
+haproxy_cfg.txt → Configuration file after stopped one container
+docker_ps.txt  → Information about docker ps  
+nodes_file.txt → Content inside the folder /nodes and there is also all content inside different files inside it.
 
 ### Task 6: Make the load balancer automatically reload the new configuration
 
