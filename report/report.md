@@ -167,6 +167,17 @@ nodes_file.txt → Content inside the folder /nodes and there is also all conten
 
 ### Task 6: Make the load balancer automatically reload the new configuration
 
+In this screenshot we can see that we create 5 containers who are in the cluster and when we try it on website we can see that we have access on it.
+
+this logs file (logs/task6/docker_ps1.txt) contains all containers who is running.
+
+![](images/6_0_state_page.png)
+
+This screenshot was done after shuting down 2 machine and we can see that the haproxy did the modification.
+
+this log file (logs/task6/docker_ps2.txt) contains all containers who is running after shuting down the 2 containers.
+
+![](images/6_1_state_page.png)
 
 
 ### Difficulties
