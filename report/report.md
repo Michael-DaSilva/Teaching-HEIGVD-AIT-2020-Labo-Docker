@@ -111,11 +111,8 @@ Like we explained at question **M4** one of the solution should be to let the no
 
 **Deliverables**
 
-1. TODO
+1. To reduce the image one of the best way to do that is to do like the second example:
 
---------------------------------------------------------
-
-To reduce the image one of the best way to do that is to do like the second example:
 ```
   RUN command 1 && command 2 && command 3
 ```
@@ -162,7 +159,7 @@ https://tuhrig.de/flatten-a-docker-container-or-image/
 
 **Deliverables**
 
-In the folder logs/task5 you can find all file for this delivery.
+In the folder logs/task5 you can find all files for this delivery.
 
 **Part 1:**  
 haproxy_cfg1.txt → After ha started  
@@ -195,14 +192,16 @@ nodes_file.txt → Content inside the folder /nodes and there is also all conten
 
 
 
-2. We are pleased with the final solution because it adapts itself with the containers leaving and joining the cluster. The IP addresses for the frontend servers are given dynamically and it's good. TODO
+2. We are pleased with the final solution because it adapts itself with the containers leaving and joining the cluster. The IP addresses for the frontend servers are given dynamically and it's good. 
+
+   TODO
 
 
 
 ### Difficulties
 
-TODO
+At the end of laboratory Michael couldn't launch the docker-compose and we don't know what was the problem.
 
 ### Conclusion
 
-TODO
+In conclusion, this laboratoire was very interesting for us to see and understanding load balancer with dynamic webserver added or delete and learn differents best practices for small docker images.
