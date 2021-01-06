@@ -47,7 +47,7 @@ Like we explained at question **M4** one of the solution should be to let the no
 
 ![](images/0_stats_page.png)
 
-2. **URL of our repository:** https://github.com/Michael-DaSilva/Teaching-HEIGVD-AIT-2020-Labo-Docker
+2. <u>**URL of our repository:**</u> https://github.com/Michael-DaSilva/Teaching-HEIGVD-AIT-2020-Labo-Docker
 
 
 
@@ -85,69 +85,75 @@ Like we explained at question **M4** one of the solution should be to let the no
 
 1. For this task, again the logs are available in the `logs` directory into `task3`.
 
-![](images/3_ha_logs.png)
+   ![](images/3_ha_logs.png)
 
-​	If we check the logs of `ha` all the installed services are running and it detects the two `webapp` nodes that joined the cluster.
+   If we check the logs of `ha` all the installed services are running and it detects the two `webapp` nodes that joined the cluster.
 
-![](images/3_s1_logs.png)
+   ![](images/3_s1_logs.png)
 
-​	We can see the same informations in the logs of `s1` (nodes connected to the cluster) and the logs of the web server running.
+   We can see the same informations in the logs of `s1` (nodes connected to the cluster) and the logs of the web server running.
 
-![](images/3_s2_logs.png)
+   ![](images/3_s2_logs.png)
 
-​	Finally, `s2` node has the same information that `s1`. If we kill one of the node, the load balancer detect it and spread the information to the others nodes.
+   Finally, `s2` node has the same information that `s1`. If we kill one of the node, the load balancer detect it and spread the information to the others nodes.
 
-![](images/3_ha_logs2.png)
+   ![](images/3_ha_logs2.png)
 
-![](images/3_s1_logs2.png)
+   ![](images/3_s1_logs2.png)
 
 2. For the logs inside the `haproxy` container here is the content:
 
-![](images/3_ha_internal_logs.png)
+   ![](images/3_ha_internal_logs.png)
 
-​	We can see there is indeed the 3 containers we ran.
+   We can see there is indeed the 3 containers we ran.
+
+
 
 ### Task 4: Use a template engine to easily generate configuration files
 
 **Deliverables**
 
-1. To reduce the image one of the best way to do that is to do like the second example:
+1. To reduce the time to create the image, one of the best way to do that is **to cache the image** and then add the new command `RUN` after. We should run the Dockerfile first without `xz-utils` then add it after the first `RUN`, like this:
 
-```
-  RUN command 1 && command 2 && command 3
-```
-Because it will reduce the number of layer. If we do it like the first example it will have 3 layers and with this one it will only have one layer.
+   ```bash
+   ...
+   RUN apt-get update && apt-get -y install wget curl vim iputils-ping rsyslog
+   RUN apt-get -y install xz-utils
+   ...
+   ```
 
-For Docker squashing, the objective is to flatten the image as much as possible. To do that it change all multiple layer in one layer to be smaller.
+   Because the precedent layers are cached into a directory (where the images are stored) **all the cached commands are run instantly** and so **only the last one added** is running with the necessary downloads.
 
-For Docker flattening, it will take all exisiting layers and export the as a single file system image (.tar). And then when we want to use it, we will import it but we must to be carefull because the history of container is not perserve. 
+   Concerning the merge of the command, we prefer the method as follows:
 
-```
-docker export # Flatten
-docker import # Import when using
-```
+   ```bash
+   RUN command 1 && command 2 && command 3
+   ```
 
---------------------------------------
+   It **simplifies the reading** of the Dockerfile and even when it's the first time we run the file, **the size of the image is the same**. But if we need to modify many times the image, we should use the method without the merging.
 
-// TODO QUESTION 2
+   For Docker squashing, the objective is **to flatten the image as much as possible** to get a size as small as possible. To do that we **put all the layers in one to be smaller** and **clean all unnecessary files** into the image.
+
+   For Docker flattening, it will **take all existing layers** and **export them as a single file system image (.tar)**. And when we want to use it, we will import it but we must be careful because the history of container is not preserve. 
+
+   ```bash
+   docker export # Flatten
+   docker import # Import when using
+   ```
 
 2. We should have a **base image** containing the **files and services needed by the 2 types of container** and then create their own image from the base one. It **avoids repetitions** between the images and let us reuse the base image to make others later (that need the same services / os / files).
 
---------------------------------------
+3. In the folder `logs/task4` you can find all the files for this delivery.
 
+   `1_haproxy.cfg` → Configuration file after `ha` started
+   `2_haproxy.cfg` → Configuration file After `s1` started
+   `3_haproxy.cfg` → Configuration file After `s2` started
+   `dockerps.txt`  → Information about `docker ps`  
+   `dockerInspectHa.txt` → Information about `docker inspect ha`  
+   `dockerInspectS1.txt` → Information about `docker inspect s1`  
+   `dockerInspectS2.txt` → Information about `docker inspect s2` 
 
-
-3. In the folder logs/task4 you can find all file for this delivery.
-
-   1_haproxy.cfg → Configuration file after ha started
-   2_haproxy.cfg → Configuration file After s1 started
-   3_haproxy.cfg → Configuration file After s2 started
-   dockerps.txt  → Information about docker ps  
-   dockerInspectHa.txt → Information about docker inspect ha  
-   dockerInspectS1.txt → Information about docker inspect s1  
-   dockerInspectS2.txt → Information about docker inspect s2  
-
-4. If we compare the 3 files (1_haproxy-cfg -> 3_haproxy.cfg) we can see that we don't have an history about all container who in joined the cluster. Every time that a container is joined the cluster it rewrites the file `haproxy.cfg`. It could be better to have an history of all joined container.
+4. If we compare the 3 files (`1_haproxy-cfg` -> `3_haproxy.cfg`) we can see that we **don't have an history** about all container who in joined the cluster. Every time that a container joins the cluster the file `haproxy.cfg` **is rewritten** . It could be better to have an history of all joined container.
 
 **source:**   
 https://docs.docker.com/develop/dev-best-practices/  
@@ -155,53 +161,59 @@ https://blog.codacy.com/five-ways-to-slim-your-docker-images/
 https://forums.docker.com/t/how-to-flatten-an-image-with-127-parents/1600  
 https://tuhrig.de/flatten-a-docker-container-or-image/
 
+
+
 ### Task 5: Generate a new load balancer configuration when membership changes
 
 **Deliverables**
 
-In the folder logs/task5 you can find all files for this delivery.
+In the folder `logs/task5` you can find all files for this delivery.
 
 **Part 1:**  
-haproxy_cfg1.txt → After ha started  
-haproxy_cfg2.txt → After s1 started  
-haproxy_cfg2.txt → After s2 started  
-docker_inspect_ha.txt → Information about docker inspect ha    
-docker_inspect_s1.txt → Information about docker inspect s1    
-docker_inspect_s2.txt → Information about docker inspect s2    
-docker_ps.txt → Information about docker ps  
+`haproxy_cfg1.txt` → After `ha` started  
+`haproxy_cfg2.txt` → After `s1` started  
+`haproxy_cfg2.txt` → After `s2` started  
+`docker_inspect_ha.txt` → Information about `docker inspect ha`   
+`docker_inspect_s1.txt` → Information about `docker inspect s1`    
+`docker_inspect_s2.txt` → Information about `docker inspect s2`    
+`docker_ps.txt` → Information about `docker ps`  
 
 **Part 2:**  
-nodes_file.txt → Content inside the folder /nodes and there is also all content inside different files inside it.
+`nodes_file.txt` → Content inside the files in the folder `/nodes` 
 
 **Part 3:**  
-haproxy_cfg.txt → Configuration file after stopped one container
-docker_ps.txt  → Information about docker ps  
-nodes_file.txt → Content inside the folder /nodes and there is also all content inside different files inside it.
+`haproxy_cfg.txt` → Configuration file after stopped one container
+`docker_ps.txt`  → Information about `docker ps`  
+`nodes_file.txt` → Content inside the files in the folder `/nodes` 
+
+
 
 ### Task 6: Make the load balancer automatically reload the new configuration
 
 **Deliverables**
 
-1. In this screenshot we can see that we create 5 containers who are in the cluster and when we try it on website we can see that we have access on it. This logs file (logs/task6/docker_ps1.txt) contains all containers who is running.
+1. In this screenshot we can see that we create **5 containers** who are **in the cluster** and when we check the infos in the stats page we can see them. This logs file (`logs/task6/docker_ps1.txt`) contains all containers that are running.
 
-![](images/6_0_state_page.png)
+   ![](images/6_0_state_page.png)
 
-​	This screenshot was done after shutting down 2 machines and we can see that the `haproxy` load balancer did the needed modification. This log file (logs/task6/docker_ps2.txt) contains all containers who is running after shutting down the 2 containers.
+   This second screenshot was done after **shutting down 2 machines** and we can see that the `haproxy` load balancer **applied the needed modifications**. This logs file (`logs/task6/docker_ps2.txt`) contains all containers that are running after shutting down 2 containers.
 
-![](images/6_1_state_page.png)
+   ![](images/6_1_state_page.png)
 
+2. We are pleased with the final solution because it adapts itself with the containers leaving and joining the cluster. The IP addresses for the frontend servers are given dynamically and the load balancer adapts itself when new nodes are joining / leaving the cluster. 
 
-
-2. We are pleased with the final solution because it adapts itself with the containers leaving and joining the cluster. The IP addresses for the frontend servers are given dynamically and it's good. 
-
-   TODO
+   At the moment we didn't find solutions that could improve significantly our current solution but they should exist at least one.
 
 
 
 ### Difficulties
 
-At the end of laboratory Michael couldn't launch the docker-compose and we don't know what was the problem.
+At the end of laboratory one of us couldn't launch the docker-compose and we don't know what was the problem (because **before the task 6** the containers and images worked perfectly). Maybe a **bad manipulation** or a **problem with the images** are the reasons of the problem because it works in the others PCs.
+
+For the rest, the instructions were very clear and precise to finish with a perfectly functioning final product (at least in most PCs).
 
 ### Conclusion
 
-In conclusion, this laboratoire was very interesting for us to see and understanding load balancer with dynamic webserver added or delete and learn differents best practices for small docker images.
+In conclusion, this lab was very interesting for us to see and understand a dynamic configuration of a load balancer and web servers, and to learn different best practices for small docker images.
+
+Even if the final solution wouldn't be considered the best solution for production, it is a perfect introduction to Docker into a professional environment.
